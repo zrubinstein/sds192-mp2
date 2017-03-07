@@ -3,7 +3,7 @@ sds192-mp2
 
 Mini-project 2:
 
-See (<https://beanumber.github.io/sds192/mod_viz.html>) for the project instructions
+See (<https://beanumber.github.io/sds192/mod_data.html>) for the project instructions
 
 ``` r
 load("house_elections.rda")
