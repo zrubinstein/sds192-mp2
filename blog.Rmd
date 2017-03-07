@@ -1,0 +1,18 @@
+---
+title: "Mini-Project 2"
+author: "Your Name Here"
+date: "March 24, 2017"
+output: html_document
+---
+
+
+## Loading the data
+
+
+```{r, include=FALSE}
+load("house_elections.rda")
+load("candidates.rda")
+load("committees.rda")
+load("contributions.rda")
+load("individuals.rda")
+```
