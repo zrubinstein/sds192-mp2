@@ -14,5 +14,4 @@ load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
-load("individuals.rda")
 ```
