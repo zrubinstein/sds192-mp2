@@ -39,6 +39,9 @@ candidates <- candidates %>%
 glimpse(candidates)
 glimpse(house_elections)
 
+house_elections <- house_elections %>%
+  mutate(cand_name=toupper(cand_name))
+
 ```
 
 
