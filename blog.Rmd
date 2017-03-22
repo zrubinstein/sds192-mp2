@@ -42,6 +42,7 @@ glimpse(house_elections)
 house_elections <- house_elections %>%
   mutate(cand_name=toupper(cand_name))
 
+full_data<-inner_join(house_elections, candidates, by="cand_name")
 ```
 
 
