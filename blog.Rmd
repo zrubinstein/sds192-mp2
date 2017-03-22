@@ -25,6 +25,7 @@ house_elections <- house_elections %>%
 house_elections <- house_elections %>%
   filter(state=="PA") %>%
   arrange(district)
+
 candidates <- candidates %>%
   filter(cand_office_state=="PA") %>%
   filter(cand_election_yr=="2012") %>%
@@ -43,6 +44,14 @@ house_elections <- house_elections %>%
   mutate(cand_name=toupper(cand_name))
 
 house_elections$cand_name <- gsub("\\.", "", house_elections$cand_name)
+```
+
+```{r}
+candidates <- candidates %>%
+  select(cand_name, party, district, cand_city)
+
+house_elections <- house_elections %>%
+  select(district, cand_name, party, primary_votes)
 ```
 
 
