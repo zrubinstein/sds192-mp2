@@ -13,8 +13,34 @@ load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
+library(tidyverse)
 
 # join candidates to house_elections
 # look at candidates' votes, city, state, party
 # visual/map?
+
+house_elections <- house_elections %>%
+  rename(cand_name=candidate_name) 
+
+house_elections <- house_elections %>%
+  filter(state=="PA") %>%
+  arrange(district)
+candidates <- candidates %>%
+  filter(cand_office_state=="PA") %>%
+  filter(cand_election_yr=="2012") %>%
+  arrange(cand_office_district)
+
+candidates <- candidates %>%
+  rename(party=cand_party_affiliation) %>%
+  rename(year=cand_election_yr) %>%
+  rename(state=cand_office_state) %>%
+  rename(district=cand_office_district)
+
+glimpse(candidates)
+glimpse(house_elections)
+
 ```
+
+
+
+
