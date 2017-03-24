@@ -55,6 +55,7 @@ candidates <-mutate(candidates, party=ifelse(party=='DEM', 'D', party))
 candidates <-mutate(candidates, party=ifelse(party=='LIB', 'L', party))
 candidates <-mutate(candidates, party=ifelse(party=='IND', 'I', party))
 
+```
 
 ## cleaning up both data frames (will be done at end)
 
