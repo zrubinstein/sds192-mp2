@@ -74,6 +74,22 @@ pa_map +
   geom_polygon(color = "black", fill = NA)
 ```
 
+```{r}
+library(ggplot2)
+library(maps)
+
+pa <- map_data("state") %>%
+  subset(region == "pennsylvania")
+counties <- map_data("county") %>%
+  subset(region == "pennsylvania")
+
+pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
+  geom_polygon(color = "black", fill = "gray")
+
+pa_map +
+  geom_polygon(data = pa_county, color = "white", fill = NA) +
+  geom_polygon(color = "black", fill = NA)
+```
 
 
 
