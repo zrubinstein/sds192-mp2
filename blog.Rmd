@@ -48,7 +48,7 @@ house_elections$cand_name <- gsub("\\.", "", house_elections$cand_name)
 
 ```{r}
 candidates <- candidates %>%
-  select(cand_name, party, district, cand_city)
+  select(cand_name, party, cand_city)
 
 house_elections <- house_elections %>%
   select(district, cand_name, party, primary_votes)
