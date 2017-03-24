@@ -65,7 +65,6 @@ candidates <- candidates %>%
 
 house_elections <- house_elections %>%
   select(district, cand_name, party, primary_votes)
-```
 
 ```{r}
 library(ggplot2)
@@ -80,7 +79,7 @@ pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
   geom_polygon(color = "black", fill = "gray")
 
 pa_map +
-  geom_polygon(data = pa_county, color = "white", fill = NA) +
+  geom_polygon(data = counties, color = "white", fill = NA) +
   geom_polygon(color = "black", fill = NA)
 ```
 
