@@ -14,7 +14,7 @@ load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 library(tidyverse)
-
+ 
 # join candidates to house_elections
 # look at candidates' votes, city, state, party
 # visual/map?
@@ -52,6 +52,23 @@ candidates <- candidates %>%
 
 house_elections <- house_elections %>%
   select(district, cand_name, party, primary_votes)
+```
+
+```{r}
+library(ggplot2)
+library(maps)
+
+pa <- map_data("state") %>%
+  subset(region == "pennsylvania")
+counties <- map_data("county") %>%
+  subset(region == "pennsylvania")
+
+pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
+  geom_polygon(color = "black", fill = "gray")
+
+pa_map +
+  geom_polygon(data = pa_county, color = "white", fill = NA) +
+  geom_polygon(color = "black", fill = NA)
 ```
 
 
