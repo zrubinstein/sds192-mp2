@@ -21,28 +21,38 @@ library(tidyverse)
 
 house_elections <- house_elections %>%
   rename(cand_name=candidate_name) 
-
 house_elections <- house_elections %>%
   filter(state=="PA") %>%
   arrange(district)
+house_elections <- house_elections %>%
+  mutate(cand_name=toupper(cand_name))
+house_elections$cand_name <- gsub("\\.", "", house_elections$cand_name)
+
 candidates <- candidates %>%
   filter(cand_office_state=="PA") %>%
   filter(cand_election_yr=="2012") %>%
   arrange(cand_office_district)
-
 candidates <- candidates %>%
   rename(party=cand_party_affiliation) %>%
   rename(year=cand_election_yr) %>%
   rename(state=cand_office_state) %>%
   rename(district=cand_office_district)
 
+
 glimpse(candidates)
 glimpse(house_elections)
 
-house_elections <- house_elections %>%
-  mutate(cand_name=toupper(cand_name))
 
 full_data<-inner_join(house_elections, candidates, by="cand_name")
+
+```
+
+```{r}
+candidates <-mutate(candidates, party=ifelse(party=='REP', 'R', party))
+candidates <-mutate(candidates, party=ifelse(party=='DEM', 'D', party))  
+candidates <-mutate(candidates, party=ifelse(party=='LIB', 'L', party))
+candidates <-mutate(candidates, party=ifelse(party=='IND', 'I', party))
+
 ```
 
 
