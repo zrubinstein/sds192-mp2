@@ -69,6 +69,8 @@ house_elections <- house_elections %>%
 ```{r}
 library(ggplot2)
 library(maps)
+library(dplyr)
+library(ggthemes)
 
 pa <- map_data("state") %>%
   subset(region == "pennsylvania")
@@ -76,11 +78,15 @@ counties <- map_data("county") %>%
   subset(region == "pennsylvania")
 
 pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(color = "black", fill = "gray")
+  geom_polygon(color = "black", fill = "gray") +
+  ggtitle("Pennsylvania House Election Results by County") +
+  theme_void()
+    
 
 pa_map +
   geom_polygon(data = counties, color = "white", fill = NA) +
   geom_polygon(color = "black", fill = NA)
+
 ```
 
 
