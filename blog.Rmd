@@ -6,9 +6,8 @@ output: html_document
 ---
 
 
-## Loading the data
-
 ```{r, include=FALSE}
+## Loading the data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -50,6 +49,7 @@ full_data<-inner_join(house_elections, candidates, by="cand_name")
 
 
 ```{r}
+#renaming variables in order to help join data frames
 candidates <-mutate(candidates, party=ifelse(party=='REP', 'R', party))
 candidates <-mutate(candidates, party=ifelse(party=='DEM', 'D', party))  
 candidates <-mutate(candidates, party=ifelse(party=='LIB', 'L', party))
@@ -77,12 +77,13 @@ pa <- map_data("state") %>%
 counties <- map_data("county") %>%
   subset(region == "pennsylvania")
 
+#to get the state boundaries
 pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
   geom_polygon(color = "black", fill = "gray") +
   ggtitle("Pennsylvania House Election Results by County") +
   theme_void()
     
-
+#to distinguish county boundaries of the state
 pa_map +
   geom_polygon(data = counties, color = "white", fill = NA) +
   geom_polygon(color = "black", fill = NA)
