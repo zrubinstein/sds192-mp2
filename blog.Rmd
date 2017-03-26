@@ -92,8 +92,12 @@ pa_map +
 
 ```{r}
 data(us.cities)
+us.cities%>%
+  filter(country.etc=="PA") %>%
+  arrange(pop)
+ ## 16 cities
 map("state", "Pennsylvania")
-map.cities(us.cities, country="PA")
+map.cities(us.cities, country="PA", label=TRUE, minpop=50)
 ```
 
 
