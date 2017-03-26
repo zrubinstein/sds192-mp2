@@ -57,14 +57,17 @@ candidates <-mutate(candidates, party=ifelse(party=='IND', 'I', party))
 
 ```
 
-## cleaning up both data frames (will be done at end)
 
+## cleaning up both data frames (will be done at end)
 candidates <- candidates %>%
   select(cand_name, party, district, cand_city)
 
 
 house_elections <- house_elections %>%
   select(district, cand_name, party, primary_votes)
+
+
+
 
 ```{r}
 library(ggplot2)
@@ -100,5 +103,7 @@ map("state", "Pennsylvania")
 map.cities(us.cities, country="PA", label=TRUE, minpop=50)
 ```
 
+####An overwhelming majority of the house candidates who won the election were republican. This is somewhat surprising because we chose to look at Pennsylvania because it generally tends to be a swing state in most election, however, it was surprising in this analysis that Republican house nominations were overwhelmingly Republican. There were 12 congressional districts that voted a republican house candidate into office and 6 congressional districts that voted a democratic house candidate into office. However, it's important to note that when looking at the data, there were many instances where it was a close race between the republican and democratic candidate. 
 
+####It is interesting to look at the congressional districts that voted for a given party. Given that PA is in the northeast, and cities in the northeast generally tend to be liberal, we were surprised that in many of the congressional districts surrounding Philadelphia, the capital, the house candidate that was elected was republican. 
 
