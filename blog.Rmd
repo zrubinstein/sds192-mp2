@@ -90,6 +90,11 @@ pa_map +
 
 ```
 
+```{r}
+data(us.cities)
+map("state", "Pennsylvania")
+map.cities(us.cities, country="PA")
+```
 
 
 
