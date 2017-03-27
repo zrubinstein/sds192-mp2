@@ -1,58 +1,46 @@
 ---
 title: "Mini-Project 2"
 author: "Julia Hamilton, Zoe Rubinstein, Jessica Tin"
-date: "March 24, 2017"
+date: "March 26, 2017"
 output: html_document
 ---
 
 
-```{r, include=FALSE}
-## Loading the data
+```{r, include=FALSE, echo=FALSE}
+# Load the data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 library(tidyverse)
- 
-# join candidates to house_elections
-# look at candidates' votes, city, state, party
-# visual/map?
 
+# Reformat house_elections to match candidates
 house_elections <- house_elections %>%
-  rename(cand_name=candidate_name) 
-house_elections <- house_elections %>%
+  rename(cand_name=candidate_name) %>%
   filter(state=="PA") %>%
-  arrange(district)
-house_elections <- house_elections %>%
+  arrange(district) %>%
   mutate(cand_name=toupper(cand_name))
 house_elections$cand_name <- gsub("\\.", "", house_elections$cand_name)
 
+# Reformat candidates to match house_elections
 candidates <- candidates %>%
-  filter(cand_office_state=="PA") %>%
-  filter(cand_election_yr=="2012") %>%
-  arrange(cand_office_district)
-candidates <- candidates %>%
-  rename(party=cand_party_affiliation) %>%
-  rename(year=cand_election_yr) %>%
-  rename(state=cand_office_state) %>%
-  rename(district=cand_office_district)
+  filter(cand_office_state=="PA", cand_election_yr=="2012") %>%
+  arrange(cand_office_district) %>%
+  rename(party=cand_party_affiliation, year=cand_election_yr,
+         state=cand_office_state, district=cand_office_district)
 
+# Rename party variables to prepare candidates for join
+candidates <- mutate(candidates, party=ifelse(party=='REP', 'R', party))
+candidates <- mutate(candidates, party=ifelse(party=='DEM', 'D', party))  
+candidates <- mutate(candidates, party=ifelse(party=='LIB', 'L', party))
+candidates <- mutate(candidates, party=ifelse(party=='IND', 'I', party))
+
+# Join house_elections and candidates
+full_data <- inner_join(house_elections, candidates, by="cand_name")
 
 glimpse(candidates)
 glimpse(house_elections)
-
-```
-
-
-
-```{r}
-#renaming variables in order to help join data frames
-candidates <-mutate(candidates, party=ifelse(party=='REP', 'R', party))
-candidates <-mutate(candidates, party=ifelse(party=='DEM', 'D', party))  
-candidates <-mutate(candidates, party=ifelse(party=='LIB', 'L', party))
-candidates <-mutate(candidates, party=ifelse(party=='IND', 'I', party))
-
-full_data<-inner_join(house_elections, candidates, by="cand_name")
+glimpse(full_data)
 ```
 
 
@@ -60,38 +48,34 @@ full_data<-inner_join(house_elections, candidates, by="cand_name")
 candidates <- candidates %>%
   select(cand_name, party, district, cand_city)
 
-
 house_elections <- house_elections %>%
   select(district, cand_name, party, primary_votes)
 
-
-
-
-```{r}
+```{r, echo=FALSE}
 library(ggplot2)
 library(maps)
-library(dplyr)
 library(ggthemes)
 
+# Load PA state and county data
 pa <- map_data("state") %>%
   subset(region == "pennsylvania")
 counties <- map_data("county") %>%
   subset(region == "pennsylvania")
 
-#to get the state boundaries
+# Get the state boundaries
 pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
   geom_polygon(color = "black", fill = "gray") +
   ggtitle("Pennsylvania House Election Results by County") +
   theme_void()
     
-#to distinguish county boundaries of the state
+# Distinguish county boundaries of the state
 pa_map +
   geom_polygon(data = counties, color = "white", fill = NA) +
   geom_polygon(color = "black", fill = NA)
-
 ```
 
-```{r}
+```{r, echo=FALSE}
+# Test cities
 data(us.cities)
 us.cities%>%
   filter(country.etc=="PA") %>%
@@ -104,4 +88,19 @@ map.cities(us.cities, country="PA", label=TRUE, minpop=50)
 > An overwhelming majority of the house candidates who won the election were republican. This is somewhat surprising because we chose to look at Pennsylvania because it generally tends to be a swing state in most election, however, it was surprising in this analysis that Republican house nominations were overwhelmingly Republican. There were 12 congressional districts that voted a republican house candidate into office and 6 congressional districts that voted a democratic house candidate into office. However, it's important to note that when looking at the data, there were many instances where it was a close race between the republican and democratic candidate. 
 
 > It is interesting to look at the congressional districts that voted for a given party. Given that PA is in the northeast, and cities in the northeast generally tend to be liberal, we were surprised that in many of the congressional districts surrounding Philadelphia, the largest city, the house candidate that was elected was republican. 
+
+```{r}
+# Clean up contributions data
+contributions <- contributions %>%
+  filter(state=="PA", transaction_type=="24A"|transaction_type=="24E") %>%
+  select(cand_id, transaction_type, name, city, state, zip_code, transaction_amt)
+
+candidates2 <- candidates %>%
+  select(cand_name, party, year, cand_office, cand_city, cand_zip, cand_id)
+
+full_data2 <- inner_join(contributions, candidates2, by="cand_id")
+
+full_data2 <- full_data2 %>%
+  arrange(cand_name)
+```
 
