@@ -60,6 +60,7 @@ dems <- bigmoney %>%
 ```
 
 ```{r}
+# Plot expenditures made in support of candidates from each party by county
 ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1), 
         panel.grid=element_blank(), 
@@ -91,3 +92,5 @@ state_data <- function(cand_df, cont_df, state) {
 # Example call:
 # state_data(cand_df=candidates, cont_df=contributions, state="NY")
 ```
+
+We focus here on data for Pennsylvania, attempting to see if there was any interesting relationship between county and financial contributions made in support of candidates based on party. We did a lot of data wrangling to join candidates, contributions, and a zip code CSV. Originally, we attempted to plot contributions by county. Instead, here we plotted by county the contributions made in support of a Democratic or Republican candidate in Pennsylvania. By joining the datasets, we were able to look at the 24E contributions specifically and see how much was contributed based on count and party, combining the contribution information from the contributions data set, the candidate information from the candidates data set, and the county information from the zip code data set.
