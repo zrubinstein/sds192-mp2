@@ -41,7 +41,7 @@ zip <- zip %>%
 
 money1 <- inner_join(money, zip, by="zip_code")
 
-pa <- map_data("state", region = "pennsylvania")
+
 pa_counties <- map_data("county", region = "pennsylvania")
 
 pa_counties <- pa_counties %>%
@@ -55,6 +55,13 @@ reps <- bigmoney %>%
 dems <- bigmoney %>%
   filter(cand_party_affiliation=="DEM")
 ```
+
+```{r}
+ggplot(money1, aes(y=transaction_amt, x=County)) + geom_text(aes(label=cand_city), size=1.5)
+
+ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) + theme()
+```
+
 
 
 ```{r}
