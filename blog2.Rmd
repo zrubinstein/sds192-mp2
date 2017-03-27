@@ -40,16 +40,21 @@ zip <- zip %>%
   mutate(County=toupper(County))
 
 money1 <- inner_join(money, zip, by="zip_code")
-money1 <- money %>%
-  mutate(County=toupper(County))
 
-reps <- money1 %>%
+pa <- map_data("state", region = "pennsylvania")
+pa_counties <- map_data("county", region = "pennsylvania")
+
+pa_counties <- pa_counties %>%
+  mutate(subregion=toupper(subregion)) %>%
+  rename(County=subregion)
+
+bigmoney <- inner_join(money1, pa_counties, by="County")
+
+reps <- bigmoney %>%
   filter(cand_party_affiliation=="REP")
-dems <- money1 %>%
+dems <- bigmoney %>%
   filter(cand_party_affiliation=="DEM")
 ```
-
-
 
 
 ```{r}
@@ -70,33 +75,4 @@ pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
 pa_map +
   geom_polygon(data = counties, color = "white", fill = NA) +
   geom_polygon(color = "black", fill = NA)
-```
-
-```{r}
-pa <- map_data("state") %>%
-  subset(region == "pennsylvania")
-counties <- map_data("county") %>%
-  subset(region == "pennsylvania")
-
-rep_map <- ggplot(reps, aes(map_id = pa)) +
-        geom_map(map = pa, colour="black", size=0.1) +
-        scale_fill_gradient(low="white", high="dodgerblue4", trans="log10",
-                            na.value="white") +
-        ggtitle("Number of Permit Checks Issued in the U.S., January 2017") +
-        labs(x="Longitude", y="Latitude")
-rep_map
-
-```
-
-```{r}
-pa <- map_data("state", region = "pennsylvania")
-pa_counties <- map_data("county", region = "pennsylvania")
-
-pa_counties <- pa_counties %>%
-  mutate(subregion=toupper(subregion)) %>%
-  rename(County=subregion)
-
-ggplot() + geom_map(data = pa_counties, map = county, aes(long, lat, map_id = region))
-
-
 ```
