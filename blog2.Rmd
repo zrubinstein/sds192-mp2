@@ -1,0 +1,89 @@
+---
+title: "Mini-Project 2"
+author: "Julia Hamilton, Zoe Rubinstein, Jessica Tin"
+date: "March 26, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE, echo=FALSE}
+# Load the data
+load("candidates.rda")
+load("contributions.rda")
+library(tidyverse)
+```
+
+```{r}
+candidates1 <- candidates %>%
+  filter(cand_office_state=="PA") %>%
+  select(cand_id, cand_party_affiliation, cand_election_yr, cand_city, cand_zip) %>%
+  rename(zip_code = cand_zip)
+
+contributions1 <- contributions %>%
+  filter(state=="PA", transaction_type=="24E") %>%
+  select(cand_id, transaction_amt)
+
+money <- inner_join(candidates1, contributions1, by="cand_id")
+money<-money%>%
+  mutate(zip_code=as.numeric(zip_code))
+```
+
+```{r}
+zip <- read.csv("~/Desktop/zip_codes.csv")
+
+zip <- zip %>%
+  select(Zip_Code, County) %>%
+  rename(zip_code = Zip_Code)
+
+money1 <- inner_join(money, zip, by="zip_code")
+reps <- money1 %>%
+  filter(cand_party_affiliation=="REP")
+dems <- money1 %>%
+  filter(cand_party_affiliation=="DEM")
+```
+
+```{r}
+library(maps)
+
+# Load PA state and county data
+pa <- map_data("state") %>%
+  subset(region == "pennsylvania")
+counties <- map_data("county") %>%
+  subset(region == "pennsylvania")
+
+# Get the state boundaries
+pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
+  geom_polygon(color = "black", fill = "gray") +
+  ggtitle("Pennsylvania Contributions Supporting Republican Candidates by County")
+
+# Distinguish county boundaries of the state
+pa_map +
+  geom_polygon(data = counties, color = "white", fill = NA) +
+  geom_polygon(color = "black", fill = NA)
+```
+
+```{r}
+pa <- map_data("state") %>%
+  subset(region == "pennsylvania")
+counties <- map_data("county") %>%
+  subset(region == "pennsylvania")
+
+rep_map <- ggplot(reps, aes(map_id = pa)) +
+        geom_map(map = pa, colour="black", size=0.1) +
+        scale_fill_gradient(low="white", high="dodgerblue4", trans="log10",
+                            na.value="white") +
+        ggtitle("Number of Permit Checks Issued in the U.S., January 2017") +
+        labs(x="Longitude", y="Latitude")
+rep_map
+
+```
+
+```{r}
+pa <- map_data("state", region = "pennsylvania")
+pa_counties <- map_data("county", region = "pennsylvania")
+
+ggplot() + geom_map(data = pa_counties, map = county, aes(long, lat, map_id = region))
+```
