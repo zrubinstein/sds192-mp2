@@ -41,9 +41,6 @@ candidates <- candidates %>%
 glimpse(candidates)
 glimpse(house_elections)
 
-
-full_data<-inner_join(house_elections, candidates, by="cand_name")
-
 ```
 
 
@@ -55,6 +52,7 @@ candidates <-mutate(candidates, party=ifelse(party=='DEM', 'D', party))
 candidates <-mutate(candidates, party=ifelse(party=='LIB', 'L', party))
 candidates <-mutate(candidates, party=ifelse(party=='IND', 'I', party))
 
+full_data<-inner_join(house_elections, candidates, by="cand_name")
 ```
 
 
