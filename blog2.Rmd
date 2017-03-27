@@ -92,6 +92,10 @@ rep_map
 pa <- map_data("state", region = "pennsylvania")
 pa_counties <- map_data("county", region = "pennsylvania")
 
+pa_counties <- pa_counties %>%
+  mutate(subregion=toupper(subregion)) %>%
+  rename(County=subregion)
+
 ggplot() + geom_map(data = pa_counties, map = county, aes(long, lat, map_id = region))
 
 
