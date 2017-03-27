@@ -16,22 +16,26 @@ load("contributions.rda")
 library(tidyverse)
 ```
 
-```{r}
+```{r, echo=FALSE}
+# Clean up candidates df to prepare for join
 candidates1 <- candidates %>%
-  filter(cand_office_state=="PA") %>%
-  select(cand_id, cand_party_affiliation, cand_election_yr, cand_city, cand_zip) %>%
+  filter(cand_office_state=="PA") %>% # Only use Pennsylvania data
+  select(cand_id, cand_party_affiliation, cand_election_yr,
+         cand_city, cand_zip) %>% # Keep columns with data of interest
   rename(zip_code = cand_zip)
 
+# Clean up contributions df to prepare for join
 contributions1 <- contributions %>%
-  filter(state=="PA", transaction_type=="24E") %>%
+  filter(state=="PA", transaction_type=="24E") %>% # Only use PA data and advocating contributions
   select(cand_id, transaction_amt)
 
-money <- inner_join(candidates1, contributions1, by="cand_id")
+money <- inner_join(candidates1, contributions1, by="cand_id") # Join candidates, contributions
 money<-money%>%
   mutate(zip_code=as.numeric(zip_code))
 ```
 
-```{r}
+```{r, echo=FALSE}
+# Integrate zip codes
 zip <- read.csv("~/Desktop/zip_codes.csv")
 
 zip <- zip %>%
@@ -40,7 +44,6 @@ zip <- zip %>%
   mutate(County=toupper(County))
 
 money1 <- inner_join(money, zip, by="zip_code")
-
 
 pa_counties <- map_data("county", region = "pennsylvania")
 
@@ -70,7 +73,8 @@ ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_par
 ```
 
 
-```{r}
+
+```{r, echo=FALSE}
 # Function to get state data from candidates and contributions dfs
 state_data <- function(cand_df, cont_df, state) {
   cands <- cand_df %>%
@@ -88,24 +92,4 @@ state_data <- function(cand_df, cont_df, state) {
 
 # Example call:
 # state_data(cand_df=candidates, cont_df=contributions, state="NY")
-```
-
-```{r}
-library(maps)
-
-# Load PA state and county data
-pa <- map_data("state") %>%
-  subset(region == "pennsylvania")
-counties <- map_data("county") %>%
-  subset(region == "pennsylvania")
-
-# Get the state boundaries
-pa_map <- ggplot(data = pa, mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(color = "black", fill = "gray") +
-  ggtitle("Pennsylvania Contributions Supporting Republican Candidates by County")
-
-# Distinguish county boundaries of the state
-pa_map +
-  geom_polygon(data = counties, color = "white", fill = NA) +
-  geom_polygon(color = "black", fill = NA)
 ```
