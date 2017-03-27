@@ -6,17 +6,17 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message=FALSE, echo=TRUE)
 ```
 
-```{r, include=FALSE, echo=FALSE}
+```{r}
 # Load the data
 load("candidates.rda")
 load("contributions.rda")
 library(tidyverse)
 ```
 
-```{r, echo=FALSE}
+```{r}
 # Clean up candidates df to prepare for join
 candidates1 <- candidates %>%
   filter(cand_office_state=="PA") %>% # Only use Pennsylvania data
@@ -34,7 +34,7 @@ money<-money%>%
   mutate(zip_code=as.numeric(zip_code))
 ```
 
-```{r, echo=FALSE}
+```{r}
 # Integrate zip codes
 zip <- read.csv("~/Desktop/zip_codes.csv")
 
@@ -60,8 +60,6 @@ dems <- bigmoney %>%
 ```
 
 ```{r}
-ggplot(money1, aes(y=transaction_amt, x=County)) + geom_text(aes(label=cand_city), size=1.5)
-
 ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1), 
         panel.grid=element_blank(), 
@@ -74,7 +72,7 @@ ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_par
 
 
 
-```{r, echo=FALSE}
+```{r}
 # Function to get state data from candidates and contributions dfs
 state_data <- function(cand_df, cont_df, state) {
   cands <- cand_df %>%
