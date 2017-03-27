@@ -62,7 +62,25 @@ ggplot(money1, aes(y=transaction_amt, x=County)) + geom_text(aes(label=cand_city
 ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1), panel.grid=element_blank(), axis.ticks.length = unit(0.3, "cm"))
 ```
+```{r}
+# Function to get state data from candidates and contributions dfs
+state_data <- function(cand_df, cont_df, state) {
+  cands <- cand_df %>%
+    filter(cand_office_state==state) %>%
+    select(cand_id, cand_party_affiliation, cand_election_yr, cand_city, cand_zip) %>%
+    rename(zip_code = cand_zip)
+  
+  conts <- cont_df %>%
+    filter(state==state, transaction_type=="24E") %>%
+    select(cand_id, transaction_amt)
+  
+  money_new <- inner_join(cands, conts, by="cand_id")
+  return(money_new)
+}
 
+# Example call:
+# state_data(cand_df=candidates, cont_df=contributions, state="NY")
+```
 
 ```{r}
 library(maps)
