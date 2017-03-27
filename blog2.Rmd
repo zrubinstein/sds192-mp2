@@ -36,14 +36,21 @@ zip <- read.csv("~/Desktop/zip_codes.csv")
 
 zip <- zip %>%
   select(Zip_Code, County) %>%
-  rename(zip_code = Zip_Code)
+  rename(zip_code = Zip_Code) %>%
+  mutate(County=toupper(County))
 
 money1 <- inner_join(money, zip, by="zip_code")
+money1 <- money %>%
+  mutate(County=toupper(County))
+
 reps <- money1 %>%
   filter(cand_party_affiliation=="REP")
 dems <- money1 %>%
   filter(cand_party_affiliation=="DEM")
 ```
+
+
+
 
 ```{r}
 library(maps)
@@ -86,4 +93,6 @@ pa <- map_data("state", region = "pennsylvania")
 pa_counties <- map_data("county", region = "pennsylvania")
 
 ggplot() + geom_map(data = pa_counties, map = county, aes(long, lat, map_id = region))
+
+
 ```
