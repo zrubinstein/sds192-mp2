@@ -59,9 +59,9 @@ dems <- bigmoney %>%
 ```{r}
 ggplot(money1, aes(y=transaction_amt, x=County)) + geom_text(aes(label=cand_city), size=1.5)
 
-ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) + theme()
+ggplot(money1, aes(y=transaction_amt, x=County)) + geom_point(aes(color=cand_party_affiliation, shape=cand_party_affiliation), position = position_jitter(width = 0.25, height = 0), size=2.5) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-
 
 
 ```{r}
